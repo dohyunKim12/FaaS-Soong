@@ -6,12 +6,17 @@ metadata:
   labels:
     app: nginx
 spec:
-  replicas: 3
+  replicas: 0
   selector:
     matchLabels:
       app: nginx
   template:
     metadata:
+      annotations:
+        config.linkerd.io/proxy-cpu-limit: "1"
+        config.linkerd.io/proxy-cpu-request: "0.1"
+        config.linkerd.io/proxy-memory-limit: 1Gi
+        config.linkerd.io/proxy-memory-request: 128Mi
       labels:
         app: nginx
     spec:
@@ -20,6 +25,14 @@ spec:
         image: nginx:1.14.2
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            memory: 128M
+            cpu: 125m
+          limits:
+            memory: 1024M
+            cpu: 1000m
+
 ---
 apiVersion: v1
 kind: Service

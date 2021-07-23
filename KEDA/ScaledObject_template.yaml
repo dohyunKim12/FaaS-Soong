@@ -1,19 +1,19 @@
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: first-test
+  name: {scaled-object-name}
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1   # Optional. Default: apps/v1
-    kind: Deployment         # Optional. Default: Deployment
-    name: test1         # Mandatory. Must be in the same namespace as the ScaledObject
-    envSourceContainerName: .spec.template.spec.containers[0]     # Optional. Default: .spec.template.spec.containers[0]
+    apiVersion:    {api-version-of-target-resource}  # Optional. Default: apps/v1
+    kind:          {kind-of-target-resource}         # Optional. Default: Deployment
+    name:          {name-of-target-resource}         # Mandatory. Must be in the same namespace as the ScaledObject
+    envSourceContainerName: {container-name}         # Optional. Default: .spec.template.spec.containers[0]
   pollingInterval: 30                                # Optional. Default: 30 seconds
-  cooldownPeriod: 300                               # Optional. Default: 300 seconds
+  cooldownPeriod:  300                               # Optional. Default: 300 seconds
   minReplicaCount: 0                                 # Optional. Default: 0
   maxReplicaCount: 100                               # Optional. Default: 100
   advanced:                                          # Optional. Section to specify advanced options
-    restoreToOriginalReplicaCount: false        # Optional. Default: false
+    restoreToOriginalReplicaCount: true/false        # Optional. Default: false
     horizontalPodAutoscalerConfig:                   # Optional. Section to specify HPA related options
       behavior:                                      # Optional. Use to modify HPA's scaling behavior
         scaleDown:
@@ -22,7 +22,7 @@ spec:
           - type: Percent
             value: 100
             periodSeconds: 15
-  triggers:
+  triggers:                                          # For example.
   - type: cpu
     metadata:
       type: Utilization
