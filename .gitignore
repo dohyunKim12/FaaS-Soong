@@ -1,3 +1,5 @@
 Image_Captioning/tensorflow/server/annotations
 
 *.tar
+
+Image_Captioning/tensorflow/server/checkpoints
