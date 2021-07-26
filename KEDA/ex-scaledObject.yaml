@@ -78,11 +78,14 @@ spec:
             value: 100
             periodSeconds: 15
   triggers:
-  - type: cpu
+  - type: rabbitmq
     metadata:
-      type: Utilization
-      value: "3"
-  # {list of triggers to activate scaling of the target resource}
+      host: amqp://faasoong:tnd@192.168.0.218:5672/
+      protocol: amqp 
+      mode: QueueLength 
+      value: "3" 
+      queueName: hello
+      vhostName: /
 
 #  triggers:
 #  - type: rabbitmq
