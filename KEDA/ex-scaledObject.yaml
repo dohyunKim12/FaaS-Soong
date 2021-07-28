@@ -78,8 +78,57 @@ spec:
             value: 100
             periodSeconds: 15
   triggers:
-  - type: cpu
+  - type: rabbitmq
     metadata:
-      type: Utilization
-      value: "3"
-  # {list of triggers to activate scaling of the target resource}
+      host: amqp://faasoong:tnd@192.168.0.218:5672/
+      protocol: amqp 
+      mode: QueueLength 
+      value: "3" 
+      queueName: hello
+      vhostName: /
+
+#  triggers:
+#  - type: rabbitmq
+#    metadata:
+#      host: amqp://faasoong:tnd@localhost:5672/dev1
+#      protocol: amqp 
+#      mode: QueueLength 
+#      value: "3" 
+#      queueName: hello
+#      vhostName: /dev1
+
+#  triggers:
+#  - type: cpu
+#    metadata:
+#      type: Utilization
+#      value: "3"
+#  # {list of triggers to activate scaling of the target resource}
+
+
+#  triggers:
+#  - type: rabbitmq
+#    metadata:
+#      protocol: amqp
+#      queueName: hello
+#      mode: QueueLength
+#      value: "3"
+#    authenticationRef:
+#      name: keda-trigger-auth-rabbitmq-conn
+#---
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: keda-rabbitmq-secret
+#data:
+#  host: amqp://faasoong:tnd@localhost:5672/dev1 # base64 encoded value of format amqp://guest:password@localhost:5672/vhost
+#---
+#apiVersion: keda.sh/v1alpha1
+#kind: TriggerAuthentication
+#metadata:
+#  name: keda-trigger-auth-rabbitmq-conn
+#  namespace: keda
+#spec:
+#  secretTargetRef:
+#    - parameter: host
+#      name: keda-rabbitmq-secret
+#      key: host
