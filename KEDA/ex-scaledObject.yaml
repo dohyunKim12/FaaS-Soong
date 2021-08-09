@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: location-service
   namespace: keda
   labels:
-    app: nginx
+    app: location
 spec:
   replicas: 0
   selector:
     matchLabels:
-      app: nginx
+      app: location
   template:
     metadata:
       annotations:
@@ -18,7 +18,7 @@ spec:
         config.linkerd.io/proxy-memory-limit: 1Gi
         config.linkerd.io/proxy-memory-request: 128Mi
       labels:
-        app: nginx
+        app: location
     spec:
       containers:
       - name: nginx
@@ -37,10 +37,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  name: location
   namespace: keda
   labels:
-    app: nginx
+    app: location
 spec:
   type: NodePort     # 서비스 타입
   ports:
@@ -49,7 +49,7 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: nginx
+    app: location
 
 ---
 apiVersion: keda.sh/v1alpha1
@@ -61,10 +61,10 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1   # Optional. Default: apps/v1
     kind: Deployment         # Optional. Default: Deployment
-    name: nginx-deployment         # Mandatory. Must be in the same namespace as the ScaledObject
+    name: location-service         # Mandatory. Must be in the same namespace as the ScaledObject
     envSourceContainerName: nginx  # Optional. Default: .spec.template.spec.containers[0]
   pollingInterval: 30                                # Optional. Default: 30 seconds
-  cooldownPeriod: 300                               # Optional. Default: 300 seconds
+  cooldownPeriod: 15                                 # Optional. Default: 300 seconds 아예 다시 zero상태로 돌아가는데 까지 걸리는 시간
   minReplicaCount: 0                                 # Optional. Default: 0
   maxReplicaCount: 100                               # Optional. Default: 100
   advanced:                                          # Optional. Section to specify advanced options
@@ -72,7 +72,7 @@ spec:
     horizontalPodAutoscalerConfig:                   # Optional. Section to specify HPA related options
       behavior:                                      # Optional. Use to modify HPA's scaling behavior
         scaleDown:
-          stabilizationWindowSeconds: 300
+          stabilizationWindowSeconds: 15             # 스케일 다운하는데 걸리는 시간.
           policies:
           - type: Percent
             value: 100
@@ -80,55 +80,10 @@ spec:
   triggers:
   - type: rabbitmq
     metadata:
-      host: amqp://faasoong:tnd@192.168.0.218:5672/
+      host: amqp://faasoong:tnd@116.89.189.12:5672/
       protocol: amqp 
       mode: QueueLength 
       value: "3" 
       queueName: hello
       vhostName: /
 
-#  triggers:
-#  - type: rabbitmq
-#    metadata:
-#      host: amqp://faasoong:tnd@localhost:5672/dev1
-#      protocol: amqp 
-#      mode: QueueLength 
-#      value: "3" 
-#      queueName: hello
-#      vhostName: /dev1
-
-#  triggers:
-#  - type: cpu
-#    metadata:
-#      type: Utilization
-#      value: "3"
-#  # {list of triggers to activate scaling of the target resource}
-
-
-#  triggers:
-#  - type: rabbitmq
-#    metadata:
-#      protocol: amqp
-#      queueName: hello
-#      mode: QueueLength
-#      value: "3"
-#    authenticationRef:
-#      name: keda-trigger-auth-rabbitmq-conn
-#---
-#apiVersion: v1
-#kind: Secret
-#metadata:
-#  name: keda-rabbitmq-secret
-#data:
-#  host: amqp://faasoong:tnd@localhost:5672/dev1 # base64 encoded value of format amqp://guest:password@localhost:5672/vhost
-#---
-#apiVersion: keda.sh/v1alpha1
-#kind: TriggerAuthentication
-#metadata:
-#  name: keda-trigger-auth-rabbitmq-conn
-#  namespace: keda
-#spec:
-#  secretTargetRef:
-#    - parameter: host
-#      name: keda-rabbitmq-secret
-#      key: host
