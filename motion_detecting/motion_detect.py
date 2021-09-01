@@ -1,12 +1,13 @@
 import cv2
 import numpy as np
+import pika
  
 thresh = 25
 max_diff = 5
  
 a, b, c = None, None, None
  
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("/app/test.mp4")
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 320)
  
@@ -48,15 +49,30 @@ if cap.isOpened():
             (0, 255, 0): 사각형을 그릴 색상 값
             2 : thickness
             '''
+            url = 'amqp://faasoong:tnd@faasoong.iptime.org:5672/'
+            connection = pika.BlockingConnection(pika.URLParameters('amqp://faasoong:tnd@116.89.189.12:5672/'))
+            #pika.ConnectionParameters(host='localhost'))
+            channel = connection.channel()
+
+            channel.queue_declare(queue='motion')
+
+            channel.basic_publish(exchange='', routing_key='motion', body='100')
+            print(" [x] Sent 'Hello World!'")
+            connection.close()
+
+
  
             cv2.putText(draw, "Motion detected!!", (10, 30),
                         cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255))
  
         stacked = np.hstack((draw, cv2.cvtColor(diff, cv2.COLOR_GRAY2BGR)))
-        cv2.imshow('motion', stacked)
+#        cv2.imshow('motion', stacked)
  
         a = b
         b = c
  
         if cv2.waitKey(1) & 0xFF == 27:
             break
+
+
+
