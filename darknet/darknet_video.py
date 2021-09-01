@@ -10,7 +10,7 @@ from queue import Queue
 import pika
 
 url = 'amqp://faasoong:tnd@116.89.189.12:5672/'
-video = '/home2/faasoong/Workspace/training/darknet/test3.mp4'
+video = '/home2/faasoong/Workspace/training/darknet/test.mp4'
 weight = '/home2/faasoong/Workspace/training/weight back/accident_fire_gun_knife_320x320/yolov4-faasoong_final.weights'
 cfg = '/home2/faasoong/Workspace/training/darknet/build/darknet/x64/cfg/yolov4-faasoong.cfg'
 data = '/home2/faasoong/Workspace/training/darknet/build/darknet/x64/data/obj.data'
@@ -31,7 +31,7 @@ def parser():
                         help="path to config file")
     parser.add_argument("--data_file", default= data,
                         help="path to data file")
-    parser.add_argument("--thresh", type=float, default=.35,
+    parser.add_argument("--thresh", type=float, default=.1,
                         help="remove detections with confidence below this value")
     return parser.parse_args()
 
@@ -141,7 +141,7 @@ def inference(darknet_image_queue, detections_queue, fps_queue):
             elif i[0] == 'knife': knife += 1
             else: accident, fire, people, gun, knife = 0,0,0,0,0
         if accident >= 5 :
-            trigger('hello')
+            trigger('accident')
             accident = 0
         elif fire >= 5 :
             trigger('fire')
