@@ -1,4 +1,4 @@
-# 분산 Edge Cloud 환경에서 <br/>Event 기반 Function-as-a-Service 기능 개발
+# 분산 Edge Cloud 환경에서 <br/>Event 기반 Function-as-a-Service 기능 개발<br/>[![license](https://img.shields.io/github/license/dohyunKim12/FaaS-Soong.svg?style=flat-square)](https://github.com/dohyunKim12/FaaS-Soong/blob/master/LICENSE)
 
 > :trophy: 2021년 NET 챌린지 캠프 시즌8 출품작. 숭실대학교 팀 빠숭(FaaS-Soong)
 
@@ -17,10 +17,12 @@ KEDA(Kubernetes-Event-Driven-AutoScaling)을 활용한 Scale-to-Zero 구현.
 **Point of Infrasturcture**  
 - Kubernetes를 활용한 Cluster 구축.
 - Cluster Monitoring을 위해 Prometheus와 Grafana를 설치.
-- 
+- KEDA 및 RabbitMQ Server 설치.
 
 **Point of Service**  
-- FaaS로써 
+- 사고 상황을 감지하는 Deep Learning Model을 FaaS로써 배포.  
+상황 감지를 단계적으로 구현함으로써 자원 효율성을 극대화한다.  
+OpenCV를 이용하여 움직임을 감지하는 pod를 worker 노드에서 :
 
 ## Architecture
 
