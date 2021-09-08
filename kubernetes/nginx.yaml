@@ -1,0 +1,53 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: location-service
+  namespace: default
+  labels:
+    app: location
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: location
+  template:
+    metadata:
+      annotations:
+        config.linkerd.io/proxy-cpu-limit: "1"
+        config.linkerd.io/proxy-cpu-request: "0.1"
+        config.linkerd.io/proxy-memory-limit: 1Gi
+        config.linkerd.io/proxy-memory-request: 128Mi
+      labels:
+        app: location
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 128M
+            cpu: 125m
+          limits:
+            memory: 1024M
+            cpu: 1000m
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: location
+  namespace: default
+  labels:
+    app: location
+spec:
+  type: NodePort     # 서비스 타입
+  ports:
+  - port: 8080       # 서비스 포트
+    targetPort: 80   # 타켓, 즉 pod의 포트
+    protocol: TCP
+    name: http
+  selector:
+    app: location
