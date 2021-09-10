@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: move-detection-model
+  namespace: keda
+  labels:
+    app: move
+spec:
+  template:
+    spec:
+      nodeSelector:
+        worker: faasoong-worker
+      containers:
+      - name: move-detection
+        image: dohyunkim12/motion_detect:5.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8011
+      restartPolicy: Never
+  backoffLimit: 4
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: move
+  namespace: keda
+  labels:
+    app: move
+spec:
+  type: NodePort     # 서비스 타입
+  ports:
+  - port: 8080       # 서비스 포트
+    targetPort: 8011   # 타켓, 즉 pod의 포트
+    protocol: TCP
+    name: http
+  selector:
+    app: move
