@@ -6,7 +6,7 @@
   </head>
   <body>
     <?php
-      $jb_conn = mysqli_connect( '10.0.30.123:13307', 'e7d68c702d6497a2', '76d6368876fd347f', 'op_8d01ccf3_b9ed_4f40_94d2_395e925ba15e' );
+      $jb_conn = mysqli_connect( '10.0.30.123:13307', 'b9d9ce9397228dcc', '70bc42d901a7c17f', 'op_c3fddb95_4d3f_4ac3_88c3_11bbf2d726a5' );
       $jb_sql = "SELECT * FROM employees LIMIT 5;";
       $jb_result = mysqli_query( $jb_conn, $jb_sql );
       while( $jb_row = mysqli_fetch_array( $jb_result ) ) {

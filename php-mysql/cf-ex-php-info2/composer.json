@@ -1,0 +1,12 @@
+{
+    "require": {
+        "slim/slim": "2.*",
+        "videlalvaro/php-amqplib": "2.5.*",
+        "predis/predis": "1.0.*",
+        "rackspace/php-opencloud":"1.15.*",
+        "guzzlehttp/guzzle":"6.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.3.*"
+    }    
+}
