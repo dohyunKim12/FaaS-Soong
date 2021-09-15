@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: move-detection-model
-  namespace: keda
+  namespace: move-detection
   labels:
     app: move
 spec:
@@ -20,7 +20,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: move
-  namespace: keda
+  namespace: move-detection
+  labels:
   labels:
     app: move
 spec:
