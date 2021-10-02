@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: darknet-detail-detection-model
-  namespace: keda
+  namespace: detail-detection
   labels:
     app: darknet
 spec:
@@ -35,7 +35,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: darknet
-  namespace: keda
+  namespace: detail-detection
   labels:
     app: darknet
 spec:
@@ -53,7 +53,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: darknet-detail-detection-scaling
-  namespace: keda
+  namespace: detail-detection
 spec:
   scaleTargetRef:
     apiVersion: apps/v1   # Optional. Default: apps/v1
@@ -81,6 +81,41 @@ spec:
       protocol: amqp 
       mode: QueueLength 
       value: "500" 
-      queueName: motion
+      queueName: motion_soongsil
+      vhostName: /
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: darknet-detail-detection-scaling
+  namespace: detail-detection
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1   # Optional. Default: apps/v1
+    kind: Deployment         # Optional. Default: Deployment
+    name: darknet-detail-detection-model      # Mandatory. Must be in the same namespace as the ScaledObject
+    envSourceContainerName: darknet-detail-detection # Optional. Default: .spec.template.spec.containers[0]
+  pollingInterval: 10                                # Optional. Default: 30 seconds
+  cooldownPeriod: 10                                 # Optional. Default: 300 seconds 아예 다시 zero상태로 돌아가는데 까지 걸리는 시간
+  minReplicaCount: 0                                 # Optional. Default: 0
+  maxReplicaCount: 1                               # Optional. Default: 100
+  advanced:                                          # Optional. Section to specify advanced options
+    restoreToOriginalReplicaCount: false        # Optional. Default: false
+    horizontalPodAutoscalerConfig:                   # Optional. Section to specify HPA related options
+      behavior:                                      # Optional. Use to modify HPA's scaling behavior
+        scaleDown:
+          stabilizationWindowSeconds: 10             # 스케일 다운하는데 걸리는 시간.
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 10
+  triggers:
+  - type: rabbitmq
+    metadata:
+      host: amqp://faasoong:tnd@116.89.189.12:5672/
+      protocol: amqp 
+      mode: QueueLength 
+      value: "500" 
+      queueName: motion_daejeon
       vhostName: /
 

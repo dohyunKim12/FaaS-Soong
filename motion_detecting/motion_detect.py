@@ -1,19 +1,29 @@
 import cv2
 import numpy as np
 import pika
- 
+import time
+
 thresh = 25
-max_diff = 5
- 
+max_diff = 1000
+duration = 100
+
 a, b, c = None, None, None
- 
-cap = cv2.VideoCapture("/app/test.mp4")
+
+#soongsil Lat, Long
+latitude = 37.495323
+longtitude = 126.956575
+location = str(latitude) + '&' + str(longtitude)
+
+url = 'rtsp://admin:123456789a@faasoong.iptime.org:554'
+
+cap = cv2.VideoCapture(url)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 320)
  
 if cap.isOpened():
     ret, a = cap.read()
     ret, b = cap.read()
+    t = time.time()
     while ret:
         ret, c = cap.read()
         draw = c.copy()
@@ -56,15 +66,19 @@ if cap.isOpened():
 
             channel.queue_declare(queue='motion')
 
-            channel.basic_publish(exchange='', routing_key='motion', body='100')
-            print(" [x] Sent 'Hello World!'")
+            channel.basic_publish(exchange='', routing_key='motion', body=location)
+            print(" [x] Sent 'motion detected!'")
             connection.close()
 
 
  
             cv2.putText(draw, "Motion detected!!", (10, 30),
                         cv2.FONT_HERSHEY_DUPLEX, 0.5, (0, 0, 255))
- 
+            t = time.time()
+        if time.time() - t >= duration:
+            print("recevie")
+        print(time.time()- t)
+
         stacked = np.hstack((draw, cv2.cvtColor(diff, cv2.COLOR_GRAY2BGR)))
 #        cv2.imshow('motion', stacked)
  
@@ -73,6 +87,3 @@ if cap.isOpened():
  
         if cv2.waitKey(1) & 0xFF == 27:
             break
-
-
-

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: move-detection-model
-  namespace: keda
+  namespace: move-detection
   labels:
     app: move
 spec:
@@ -10,7 +10,7 @@ spec:
     worker: faasoong-worker
   containers:
   - name: move-detection
-    image: dohyunkim12/motion_detect:5.0
+    image: dohyunkim12/motion_detect:6.0
     imagePullPolicy: IfNotPresent
     ports:
     - containerPort: 8011
@@ -20,7 +20,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: move
-  namespace: keda
+  namespace: move-detection
+  labels:
   labels:
     app: move
 spec:
