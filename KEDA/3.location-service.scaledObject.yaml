@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: location-service
-  namespace: location-service
+  namespace: location
   labels:
     app: location
 spec:
@@ -41,7 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: location
-  namespace: location-service
+  namespace: location
   labels:
     app: location
 spec:
@@ -59,7 +59,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: location-service-scaling
-  namespace: location-service
+  namespace: location
 spec:
   scaleTargetRef:
     apiVersion: apps/v1   # Optional. Default: apps/v1
