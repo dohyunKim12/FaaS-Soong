@@ -1,0 +1,20 @@
+
+
+<div id='map' style='width:1000px;height:800px;display:inline-block;'></div>
+
+<script type='text/javascript' src='//dapi.kakao.com/v2/maps/sdk.js?appkey=221d1702198debe12b8e8db66ab1e5ca'></script>
+<script>
+    var latitude = 37.496123;
+    var longitude = 126.955123;
+    console.log(latitude);
+    var container = document.getElementById('map');
+    var options = {
+           center: new kakao.maps.LatLng(latitude, longitude),//(37.49634260310454, 126.95746763081013),
+           level: 3
+    };
+    var map = new kakao.maps.Map(container, options);
+    var markerPosition  = new kakao.maps.LatLng(latitude, longitude);//(37.49634260310454, 126.95746763081013);
+    var marker = new kakao.maps.Marker({position: markerPosition});
+    marker.setMap(map);
+</script>
+
