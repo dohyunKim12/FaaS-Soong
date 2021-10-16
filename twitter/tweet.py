@@ -1,6 +1,10 @@
 import tweepy
 import json, requests
 import os
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
+import time
 
 
 occ, lati, longi = '', '', ''
@@ -28,26 +32,38 @@ def get_keys():
 def upload_tweet(api):
     global occ, lati, longi
 
-    json_data = requests.get("http://amp.paasta.koren.kr/query.php")
-    data = json.loads(json_data.text)
+    fire_json_data = requests.get("http://amp.paasta.koren.kr/fire_query.php")
+    try:
+        fire_data = json.loads(fire_json_data.text)
+    except ValueError:
+        fire_data = dict()
 
-    for i in range(len(data["fire"])):
-        occ, lati, longi = data["fire"][i]["occur_time"], data["fire"][i]["latitude"], data["fire"][i]["longitude"]
+    threaten_json_data = requests.get("http://amp.paasta.koren.kr/threaten_query.php")
+    try:
+        threaten_data = json.loads(threaten_json_data.text)
+    except ValueError:
+        threaten_data = dict()
+
+    for i in range(len(fire_data["fire"])):
+        occ, lati, longi = fire_data["fire"][i]["occur_time"], fire_data["fire"][i]["latitude"], fire_data["fire"][i]["longitude"]
         msg = make_msg('f')
-        img_name = get_img()
+        map_img_name = get_map_img()
+        cctv_img_name = get_cctv_img()
 
-        media = api.media_upload(img_name)
-        status = api.update_status(status=msg, media_ids=[media.media_id])
+        map_img = api.media_upload(map_img_name)
+        cctv_img = api.media_upload(cctv_img_name)
+        status = api.update_status(status=msg, media_ids=[map_img.media_id, cctv_img.media_id])
 
-
-    for i in range(len(data["threaten"])):
-        occ, lati, longi = data["threaten"][i]["occur_time"], data["threaten"][i]["latitude"], data["threaten"][i]["longitude"]
+    for i in range(len(threaten_data["threaten"])):
+        occ, lati, longi = threaten_data["threaten"][i]["occur_time"], threaten_data["threaten"][i]["latitude"], threaten_data["threaten"][i]["longitude"]
         msg = make_msg('t')
-        img_name = get_img()
+        map_img_name = get_map_img()
+        cctv_img_name = get_cctv_img()
 
-        media = api.media_upload(img_name)
-        status = api.update_status(status=msg, media_ids=[media.media_id])
-    
+        map_img = api.media_upload(map_img_name)
+        cctv_img = api.media_upload(cctv_img_name)
+        status = api.update_status(status=msg, media_ids=[map_img.media_id, cctv_img.media_id])
+
 
 def make_msg(kind):
     global occ, lati, longi
@@ -59,15 +75,38 @@ def make_msg(kind):
     return msg
 
 
-def get_img():
+def get_map_img():
+    global lati, longi
+
+    #option = Options()
+    #option.add_argument('headless')
+    #option.add_argument('--window-size=1000, 800')
+
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+
+    browser = webdriver.Chrome('/root/FaaS-Soong/twitter/chromedriver', chrome_options=chrome_options)
+    map_url = 'http://amp.paasta.koren.kr/map.php?latitude=' + lati + '&longitude=' + longi
+    browser.get(map_url)
+    time.sleep(1)
+
+    map_img_name = './' + lati + longi + '.png'
+    browser.get_screenshot_as_file(map_img_name)
+
+    return map_img_name
+
+
+def get_cctv_img():
     global occ, lati, longi
 
     occ_rp = occ.replace(" ", "-")
-    img_name = occ_rp + lati + longi + ".png"
-    
-    os.system("scp -P 8022 root@116.89.189.12:/root/images/" + img_name + " .")
+    cctv_img_name = occ_rp + lati + longi + ".png"
 
-    return img_name
+    os.system("scp -P 8022 root@116.89.189.12:/root/images/" + cctv_img_name + " .")
+
+    return cctv_img_name
+
 
 def main():
     auth = get_keys()
