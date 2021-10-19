@@ -9,7 +9,7 @@ KEDA(Kubernetes-Event-Driven-AutoScaling)을 활용한 Scale-to-Zero 구현.
 
 ## 구성원
 * [김도현](https://github.com/dohyunKim12) (전자정보공학부)
-* 송수현 (전자정보공학부)
+* [송수현](https://github.com/suhyunS123 )(전자정보공학부)
 * 송지원 (전자정보공학부)
 * [윤창섭](https://github.com/ryunchang) (전자정보공학부)
 
