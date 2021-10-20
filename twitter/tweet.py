@@ -103,7 +103,7 @@ def get_cctv_img():
     occ_rp = occ.replace(" ", "-")
     cctv_img_name = occ_rp + lati + longi + ".png"
 
-    os.system("scp -P 8022 root@116.89.189.12:/root/images/" + cctv_img_name + " .")
+    os.system("scp -P 8024 root@faasoong.iptime.org:/root/images/" + cctv_img_name + " .")
 
     return cctv_img_name
 
@@ -114,7 +114,8 @@ def main():
 
     upload_tweet(api)
 
-    #requests.get("http://amp.paasta.koren.kr/delete.php")
+    requests.get("http://amp.paasta.koren.kr/delete.php")
+
 
 
 if __name__ == "__main__":
