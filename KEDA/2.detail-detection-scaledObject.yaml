@@ -25,28 +25,10 @@ spec:
         worker: hpc
       containers:
       - name: darknet-detail-detection
-        image: ryunchang/darknet:7.1-DBinsert
+        image: ryunchang/darknet:8.0-rtsp
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8022
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: darknet
-  namespace: detail-detection
-  labels:
-    app: darknet
-spec:
-  type: NodePort     # 서비스 타입
-  ports:
-  - port: 8080       # 서비스 포트
-    targetPort: 8022   # 타켓, 즉 pod의 포트
-    protocol: TCP
-    name: http
-  selector:
-    app: darknet
 
 ---
 apiVersion: keda.sh/v1alpha1
@@ -61,7 +43,7 @@ spec:
     name: darknet-detail-detection-model      # Mandatory. Must be in the same namespace as the ScaledObject
     envSourceContainerName: darknet-detail-detection # Optional. Default: .spec.template.spec.containers[0]
   pollingInterval: 10                                # Optional. Default: 30 seconds
-  cooldownPeriod: 10                                 # Optional. Default: 300 seconds 아예 다시 zero상태로 돌아가는데 까지 걸리는 시간
+  cooldownPeriod: 100                                 # Optional. Default: 300 seconds 아예 다시 zero상태로 돌아가는데 까지 걸리는 시간
   minReplicaCount: 0                                 # Optional. Default: 0
   maxReplicaCount: 1                               # Optional. Default: 100
   advanced:                                          # Optional. Section to specify advanced options
@@ -77,7 +59,7 @@ spec:
   triggers:
   - type: rabbitmq
     metadata:
-      host: amqp://faasoong:tnd@116.89.189.12:5672/
+      host: amqp://faasoong:tnd@faasoong.iptime.org:5672/
       protocol: amqp 
       mode: QueueLength 
       value: "500" 
