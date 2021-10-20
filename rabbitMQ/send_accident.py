@@ -7,6 +7,6 @@ channel = connection.channel()
 
 channel.queue_declare(queue='accident')
 
-channel.basic_publish(exchange='', routing_key='accident', body='36.2325&127.38321')
-print(" [x] Sent 'motion detect!'")
+channel.basic_publish(exchange='', routing_key='accident', body='37.495410&126.955841')
+print(" [x] Sent 'accident occur!'")
 connection.close()
