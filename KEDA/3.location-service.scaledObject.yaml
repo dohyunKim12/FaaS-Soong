@@ -23,8 +23,8 @@ spec:
       nodeSelector:
         worker: faasoong-worker
       containers:
-      - name: nginx
-        image: nginx:1.14.2
+      - name: tweet_upload
+        image: dohyunkim12/tweet_upload:1.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
@@ -37,24 +37,6 @@ spec:
             cpu: 1000m
 
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: location
-  namespace: location
-  labels:
-    app: location
-spec:
-  type: NodePort     # 서비스 타입
-  ports:
-  - port: 8080       # 서비스 포트
-    targetPort: 80   # 타켓, 즉 pod의 포트
-    protocol: TCP
-    name: http
-  selector:
-    app: location
-
----
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
@@ -65,7 +47,7 @@ spec:
     apiVersion: apps/v1   # Optional. Default: apps/v1
     kind: Deployment         # Optional. Default: Deployment
     name: location-service         # Mandatory. Must be in the same namespace as the ScaledObject
-    envSourceContainerName: nginx  # Optional. Default: .spec.template.spec.containers[0]
+    envSourceContainerName: tweet_upload  # Optional. Default: .spec.template.spec.containers[0]
   pollingInterval: 10                                # Optional. Default: 30 seconds
   cooldownPeriod: 10                                 # Optional. Default: 300 seconds 아예 다시 zero상태로 돌아가는데 까지 걸리는 시간
   minReplicaCount: 0                                 # Optional. Default: 0
@@ -87,6 +69,6 @@ spec:
       protocol: amqp 
       mode: QueueLength 
       value: "3" 
-      queueName: accident
+      queueName: fire
       vhostName: /
 
