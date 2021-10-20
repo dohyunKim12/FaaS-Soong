@@ -86,7 +86,7 @@ def get_map_img():
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
 
-    browser = webdriver.Chrome('/root/FaaS-Soong/twitter/chromedriver', chrome_options=chrome_options)
+    browser = webdriver.Chrome('/app/chromedriver', chrome_options=chrome_options)
     map_url = 'http://amp.paasta.koren.kr/map.php?latitude=' + lati + '&longitude=' + longi
     browser.get(map_url)
     time.sleep(1)
