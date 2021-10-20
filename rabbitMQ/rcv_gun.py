@@ -2,7 +2,7 @@
 import pika, sys, os
 
 def main():
-    connection = pika.BlockingConnection(pika.URLParameters('amqp://faasoong:tnd@116.89.189.12:5672/'))
+    connection = pika.BlockingConnection(pika.URLParameters('amqp://faasoong:tnd@faasoong.iptime.org:5672/'))
     channel = connection.channel()
 
     channel.queue_declare(queue='gun')
