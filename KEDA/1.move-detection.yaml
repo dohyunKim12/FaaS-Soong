@@ -22,13 +22,12 @@ metadata:
   name: move
   namespace: move-detection
   labels:
-  labels:
     app: move
 spec:
   type: NodePort     # 서비스 타입
   ports:
   - port: 8080       # 서비스 포트
-    targetPort: 8011   # 타켓, 즉 pod의 포트
+    targetPort: 8011   # 타켓, 즉 container의 포트
     protocol: TCP
     name: http
   selector:

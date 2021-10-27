@@ -25,7 +25,7 @@ spec:
         worker: faasoong-worker
       containers:
       - name: tweet-upload
-        image: dohyunkim12/tweet_upload:1.0
+        image: dohyunkim12/tweet_upload:2.0-threaten
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 7022
@@ -43,7 +43,7 @@ spec:
     name: tweet-upload-service         # Mandatory. Must be in the same namespace as the ScaledObject
     envSourceContainerName: tweet-upload  # Optional. Default: .spec.template.spec.containers[0]
   pollingInterval: 10                                # Optional. Default: 30 seconds
-  cooldownPeriod: 10                                 # Optional. Default: 300 seconds 아예 다시 zero상태로 돌아가는데 까지 걸리는 시간
+  cooldownPeriod: 20                                 # Optional. Default: 300 seconds 아예 다시 zero상태로 돌아가는데 까지 걸리는 시간
   minReplicaCount: 0                                 # Optional. Default: 0
   maxReplicaCount: 3                               # Optional. Default: 100
   advanced:                                          # Optional. Section to specify advanced options
