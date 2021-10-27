@@ -7,7 +7,7 @@ channel = connection.channel()
 
 channel.queue_declare(queue='motion')
 
-body_msg = '37.495323&126.956575&rtsp://admin:123456789a@faasoong.iptime.org:554'
+body_msg = '37.494775&126.959141&rtsp://admin:123456789a@faasoong.iptime.org:554'
 
 channel.basic_publish(exchange='', routing_key='motion', body=body_msg)
 print(" [x] Sent 'motion detect!' body: "+body_msg)
