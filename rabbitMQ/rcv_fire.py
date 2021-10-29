@@ -5,12 +5,12 @@ def main():
     connection = pika.BlockingConnection(pika.URLParameters('amqp://faasoong:tnd@faasoong.iptime.org:5672/'))
     channel = connection.channel()
 
-    channel.queue_declare(queue='accident')
+    channel.queue_declare(queue='fire')
 
     def callback(ch, method, properties, body):
         print(" [x] Received %r" % body)
 
-    channel.basic_consume(queue='accident', on_message_callback=callback, auto_ack=True)
+    channel.basic_consume(queue='fire', on_message_callback=callback, auto_ack=True)
 
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()

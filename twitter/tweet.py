@@ -5,9 +5,11 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 import time
+import pika
 
 
 occ, lati, longi = '', '', ''
+amqp_url = 'amqp://faasoong:tnd@faasoong.iptime.org:5672/'
 
 def get_keys():
     twitter_auth_keys = {
@@ -86,7 +88,7 @@ def get_map_img():
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
 
-    browser = webdriver.Chrome('/root/FaaS-Soong/twitter/chromedriver', chrome_options=chrome_options)
+    browser = webdriver.Chrome('/app/chromedriver', chrome_options=chrome_options)
     map_url = 'http://amp.paasta.koren.kr/map.php?latitude=' + lati + '&longitude=' + longi
     browser.get(map_url)
     time.sleep(1)
@@ -103,10 +105,18 @@ def get_cctv_img():
     occ_rp = occ.replace(" ", "-")
     cctv_img_name = occ_rp + lati + longi + ".png"
 
-    os.system("scp -P 8022 root@116.89.189.12:/root/images/" + cctv_img_name + " .")
+    os.system("scp -P 8024 root@faasoong.iptime.org:/root/images/" + cctv_img_name + " .")
 
     return cctv_img_name
 
+def rcv_msg():
+    global amqp_url
+    connection = pika.BlockingConnection(pika.URLParameters(amqp_url))
+    channel = connection.channel()
+    channel.queue_delete(queue='fire')
+    channel.queue_delete(queue='gun')
+    channel.queue_delete(queue='knife')
+    connection.close()
 
 def main():
     auth = get_keys()
@@ -114,7 +124,9 @@ def main():
 
     upload_tweet(api)
 
-    #requests.get("http://amp.paasta.koren.kr/delete.php")
+    requests.get("http://amp.paasta.koren.kr/delete.php")
+    rcv_msg()
+
 
 
 if __name__ == "__main__":

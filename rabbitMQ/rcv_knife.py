@@ -2,15 +2,15 @@
 import pika, sys, os
 
 def main():
-    connection = pika.BlockingConnection(pika.URLParameters('amqp://faasoong:tnd@116.89.189.12:5672/'))
+    connection = pika.BlockingConnection(pika.URLParameters('amqp://faasoong:tnd@faasoong.iptime.org:5672/'))
     channel = connection.channel()
 
-    channel.queue_declare(queue='image')
+    channel.queue_declare(queue='knife')
 
     def callback(ch, method, properties, body):
         print(" [x] Received %r" % body)
 
-    channel.basic_consume(queue='image', on_message_callback=callback, auto_ack=True)
+    channel.basic_consume(queue='knife', on_message_callback=callback, auto_ack=True)
 
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()

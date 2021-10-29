@@ -10,7 +10,7 @@ spec:
     worker: faasoong-worker
   containers:
   - name: move-detection
-    image: dohyunkim12/motion_detect:6.0
+    image: dohyunkim12/motion_detect:8.0-with-clearqueue
     imagePullPolicy: IfNotPresent
     ports:
     - containerPort: 8011
@@ -22,13 +22,12 @@ metadata:
   name: move
   namespace: move-detection
   labels:
-  labels:
     app: move
 spec:
   type: NodePort     # 서비스 타입
   ports:
   - port: 8080       # 서비스 포트
-    targetPort: 8011   # 타켓, 즉 pod의 포트
+    targetPort: 8011   # 타켓, 즉 container의 포트
     protocol: TCP
     name: http
   selector:
