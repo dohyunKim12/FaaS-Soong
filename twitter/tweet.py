@@ -5,9 +5,11 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 import time
+import pika
 
 
 occ, lati, longi = '', '', ''
+amqp_url = 'amqp://faasoong:tnd@faasoong.iptime.org:5672/'
 
 def get_keys():
     twitter_auth_keys = {
@@ -107,6 +109,14 @@ def get_cctv_img():
 
     return cctv_img_name
 
+def rcv_msg():
+    global amqp_url
+    connection = pika.BlockingConnection(pika.URLParameters(amqp_url))
+    channel = connection.channel()
+    channel.queue_delete(queue='fire')
+    channel.queue_delete(queue='gun')
+    channel.queue_delete(queue='knife')
+    connection.close()
 
 def main():
     auth = get_keys()
@@ -115,6 +125,7 @@ def main():
     upload_tweet(api)
 
     requests.get("http://amp.paasta.koren.kr/delete.php")
+    rcv_msg()
 
 
 
