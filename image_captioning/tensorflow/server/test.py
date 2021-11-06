@@ -176,6 +176,6 @@ def evaluate(image):
     return result
 
 if __name__ == '__main__' :
-    image="/home2/faasoong/Workspace/FaaS-Soong/image_captioning/tensorflow/test_img/COCO_val2014_000000000042.jpg"
+    image="/home2/faasoong/Workspace/FaaS-Soong/image_captioning/tensorflow/test_img/accident.jpg"
     msg = evaluate(image) #캡션 전송
     print(msg)

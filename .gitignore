@@ -6,3 +6,8 @@ image_captioning/tensorflow/server/checkpoints
 
 image_captioning/tensorflow/test_img
 
+image_captioning/tensorflow2/add_caption
+
+image_captioning/tensorflow2/Flicker8k_Dataset
+
+

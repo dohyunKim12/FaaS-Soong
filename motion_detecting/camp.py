@@ -6,6 +6,6 @@ cap = cv2.VideoCapture(url)
 while True :
     ret, frame = cap.read() # 윈도우 창 출력용
 
-    print(frame)
-    #cv2.imshow("video", frame)
-    #cv2.waitKey(1)
+    #print(frame)
+    cv2.imshow("video", frame)
+    cv2.waitKey(1)
