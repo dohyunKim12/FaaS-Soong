@@ -5,10 +5,8 @@ connection = pika.BlockingConnection(pika.URLParameters('amqp://faasoong:tnd@faa
     #pika.ConnectionParameters(host='localhost'))
 channel = connection.channel()
 
-channel.queue_declare(queue='motion')
+channel.queue_declare(queue='caption')
 
-body_msg = '37.494775&126.959141&rtsp://admin:123456789a@220.72.73.126:554'
-
-channel.basic_publish(exchange='', routing_key='motion', body=body_msg)
-print(" [x] Sent 'motion detect!' body: "+body_msg)
+channel.basic_publish(exchange='', routing_key='caption', body='2021-11-09-20:30:4637.494779126.95916.png')
+print(" [x] Sent 'accident occur!'")
 connection.close()
