@@ -25,10 +25,19 @@ spec:
         worker: hpc
       containers:
       - name: darknet-detail-detection
-        image: ryunchang/darknet:8.0-rtsp
+        image: ryunchang/darknet:9.0-captioning      #####image
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8022
+        volumeMounts:
+        - mountPath: /app/img    #container
+          name: cap-vol
+      volumes:
+      - name: cap-vol
+        hostPath:
+          type: Directory
+          path: /home/faasoong/mntdir    #GPU server
+
 
 ---
 apiVersion: keda.sh/v1alpha1

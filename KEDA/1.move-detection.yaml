@@ -10,7 +10,8 @@ spec:
     worker: faasoong-worker
   containers:
   - name: move-detection
-    image: dohyunkim12/motion_detect:8.0-with-clearqueue
+#    image: dohyunkim12/motion_detect:8.0-with-clearqueue
+    image: dohyunkim12/motion_detect:8.0-demo
     imagePullPolicy: IfNotPresent
     ports:
     - containerPort: 8011

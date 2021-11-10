@@ -25,7 +25,7 @@ spec:
         worker: faasoong-worker
       containers:
       - name: tweet-upload
-        image: dohyunkim12/tweet_upload:2.0-threaten
+        image: dohyunkim12/tweet_upload:3.0-captioning     ##### image
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 7022
