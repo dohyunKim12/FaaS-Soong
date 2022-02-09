@@ -1,6 +1,6 @@
 # 분산 Edge Cloud 환경에서 <br/>Event 기반 Function-as-a-Service 기능 개발<br/>[![license](https://img.shields.io/github/license/dohyunKim12/FaaS-Soong.svg?style=flat-square)](https://github.com/dohyunKim12/FaaS-Soong/blob/master/LICENSE)
 
-> :trophy: 2021년 NET 챌린지 캠프 시즌8 출품작. 숭실대학교 팀 빠숭(FaaS-Soong)
+> :trophy: 2021년 NET 챌린지 캠프 시즌8 금상작. 숭실대학교 팀 빠숭(FaaSoong)
 
 ## 개요
 KEDA(Kubernetes-Event-Driven-AutoScaling)을 활용한 Scale-to-Zero 구현. 
